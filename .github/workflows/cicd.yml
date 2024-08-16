@@ -50,7 +50,7 @@ jobs:
     - name: Test with pytest
       run: |
         export PYTHONPATH=src
-        pytest  test/test.py
+        pytest  src/test/test.py
     
     - name: Run Snyk to check for vulnerabilities
       uses: snyk/actions/python@master
