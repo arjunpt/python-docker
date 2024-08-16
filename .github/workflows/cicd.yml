@@ -126,7 +126,8 @@ jobs:
         apt-cache policy docker-ce
         sudo apt install docker-ce -y
         chmod 666 /var/run/docker.sock
-        sudo systemctl status docker
+        sudo usermod -aG docker $USER
+        sudo systemctl restart docker
 
     - name: pull and run docker image
       env:
