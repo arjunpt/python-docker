@@ -59,9 +59,17 @@ jobs:
       with:
         command: code test
       
-    - name: Build the Docker image
-      run: |
-          docker buildx build . -t appdev:latest
+    - name: Checkout repository
+      uses: actions/checkout@v4
+  
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: ./Dockerfile
 
     - name: Scan Docker image 
       uses: snyk/actions/docker@master
