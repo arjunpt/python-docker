@@ -63,6 +63,7 @@ jobs:
     - name: Install Docker
       run: |
         sudo apt-get update
+        sudo apt-get remove containerd
         sudo apt-get install -y docker.io
       
     - name: Change Docker socket permissions
@@ -71,7 +72,7 @@ jobs:
       
     - name: Build the Docker image
       run: |
-          docker build . --file Dockerfile --tag appdev:$(date +%s)
+          docker build . --file Dockerfile --t appdev:$(date +%s)
       
     - name: Set up SSH key and whitelist EC2 IP address 
       run: |
