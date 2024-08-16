@@ -106,7 +106,7 @@ jobs:
         docker tag appdev:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
-    - name: Set up SSH key and whitelist EC2 IP address 
+    - name: Set up SSH key  
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
@@ -116,5 +116,24 @@ jobs:
     - name: Verify SSH Connection 
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 
-        ls /home
+    - name: Install Docker on Ubuntu EC2
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << EOF
+        sudo apt update -y
+        sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        apt-cache policy docker-ce
+        sudo apt install docker-ce -y
+        chmod 666 /var/run/docker.sock
+        sudo systemctl status docker
+
+    - name: Build and push Docker image
+      env:
+        ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+      run: |
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker image
         
+
