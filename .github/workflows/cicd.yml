@@ -71,6 +71,7 @@ jobs:
         context: .
         file: ./Dockerfile
         tags: appdev:latest
+        load: true
       
     - name: List Docker images
       run: |
