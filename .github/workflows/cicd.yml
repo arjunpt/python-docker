@@ -61,7 +61,7 @@ jobs:
       
     - name: Build the Docker image
       run: |
-          docker build -t appdev:latest .
+          docker buildx build . -t appdev:latest
 
     - name: Scan Docker image 
       uses: snyk/actions/docker@master
