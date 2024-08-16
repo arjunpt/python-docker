@@ -58,6 +58,21 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         command: code test
+
+
+    - name: Install Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+      
+    - name: Change Docker socket permissions
+      run: |
+        chmod 666 /var/run/docker.sock
+      
+    - name: Build the Docker image
+      run: |
+          docker build . --file Dockerfile --tag appdev:$(date +%s)
+      
     - name: Set up SSH key and whitelist EC2 IP address 
       run: |
         mkdir -p ~/.ssh
