@@ -60,18 +60,19 @@ jobs:
         command: code test
       
     - name: Build the Docker image
+      env:
+        IMAGE_TAG: appdev:$(date +%s)
       run: |
-          docker build . -t appdev:$(date +%s)
+        docker build . -t $IMAGE_TAG
 
     - name: Scan Docker image 
       uses: snyk/actions/docker@master
       continue-on-error: true
-      env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        image: appdev:$(date +%s)
+        image: ${{ env.IMAGE_TAG }}
         args: --file=Dockerfile --severity-threshold=high --sarif-file-output=snyk.sarif
-        
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       
     - name: Set up SSH key and whitelist EC2 IP address 
       run: |
