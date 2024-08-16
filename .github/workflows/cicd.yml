@@ -125,7 +125,7 @@ jobs:
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         apt-cache policy docker-ce
         sudo apt install docker-ce -y
-        chmod 666 /var/run/docker.sock
+        sudo chmod 666 /var/run/docker.sock
         sudo usermod -aG docker $USER
         sudo systemctl restart docker
 
