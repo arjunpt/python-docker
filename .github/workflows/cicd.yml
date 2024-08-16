@@ -129,13 +129,17 @@ jobs:
         sudo usermod -aG docker $USER
         sudo systemctl restart docker
 
+    
+
     - name: pull and run docker image
       env:
         ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
       run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << EOF
-          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker run -d -p 5000:5000 $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          sudo apt-get install -y awscli
+          sudo aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 022499010678.dkr.ecr.us-east-1.amazonaws.com
+          sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          sudo docker run -d -p 5000:5000 $ECR_REGISTRY/$ECR_REPOSITORY:latest
         
 
