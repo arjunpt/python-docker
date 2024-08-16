@@ -128,12 +128,15 @@ jobs:
         chmod 666 /var/run/docker.sock
         sudo systemctl status docker
 
-    - name: Build and push Docker image
+    - name: pull and run docker image
       env:
         ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
       run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << EOF
           docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker image
+          docker stop \$(docker ps -q --filter ancestor=$ECR_REGISTRY/$ECR_REPOSITORY:latest) || true
+          docker rm \$(docker ps -q --filter ancestor=$ECR_REGISTRY/$ECR_REPOSITORY:latest) || true
+          docker run -d -p 5000:5000 $ECR_REGISTRY/$ECR_REPOSITORY:latest
         
 
