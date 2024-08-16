@@ -70,6 +70,11 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
+        tags: appdev:latest
+      
+    - name: List Docker images
+      run: |
+        docker images
 
     - name: Scan Docker image 
       uses: snyk/actions/docker@master
