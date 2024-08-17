@@ -129,7 +129,11 @@ jobs:
         sudo usermod -aG docker $USER
         sudo systemctl restart docker
 
-    
+    - name: aws conmfigure
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        managed-session-policies: arn:aws:iam::022499010678:user/ecr-access
+        aws-region: us-east-1
 
     - name: pull and run docker image
       env:
