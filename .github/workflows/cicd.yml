@@ -162,6 +162,19 @@ jobs:
       id: login-pf-aws-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: docker-image
+        path: /tmp
+    
+    - name: List files in /tmp
+      run: ls -l /tmp
+
+    - name: Load Docker image
+      run: |
+        docker load -i /tmp/docker-images.tar
+
     - name: Build and push Docker image
       env:
         ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
