@@ -122,6 +122,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: docker_build
     steps:
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: docker-image
+        path: /tmp/docker-images.tar
+
+    - name: Load Docker image
+      run: |
+        docker load -i /tmp/docker-images.tar
+    
     - name: Scan Docker image 
       uses: snyk/actions/docker@master
       continue-on-error: true
@@ -130,16 +140,6 @@ jobs:
       with:
         image: appdev:latest
         args: --file=Dockerfile --severity-threshold=high --sarif-file-output=snyk.sarif
-    
-    - name: Download Docker image artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: docker-image
-
-    - name: Load Docker image
-      run: |
-        docker load -i /tmp/docker-images.tar
-    
   # Deployment Stage
   publish:
     runs-on: ubuntu-latest
