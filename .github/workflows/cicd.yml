@@ -135,6 +135,9 @@ jobs:
       run: |
         docker load -i /tmp/docker-images.tar
     
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
     - name: Scan Docker image 
       uses: snyk/actions/docker@master
       continue-on-error: true
