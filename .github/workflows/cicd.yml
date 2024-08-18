@@ -103,7 +103,11 @@ jobs:
         tags: appdev:latest
         load: true
 
-    - name: Save Docker image as artifact
+    - name: Save Docker image as .tar file
+      run: |
+        docker save -o /tmp/docker-images.tar appdev:latest
+  
+    - name: Upload Docker image as artifact
       uses: actions/upload-artifact@v3
       with:
         name: docker-image
