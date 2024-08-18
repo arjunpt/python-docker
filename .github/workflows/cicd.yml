@@ -195,6 +195,20 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+    - name: Setup AWS ECR Details
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-pf-aws-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+        mask-password: 'true'
+        
+
     - name: Install Docker on Ubuntu EC2
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << EOF
@@ -208,10 +222,8 @@ jobs:
         sudo usermod -aG docker $USER
         sudo systemctl restart docker
         EOF
-        
-    - name: Login to Amazon ECR
-      id: login-pf-aws-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+
+    
 
     - name: Pull and run Docker image
       env:
