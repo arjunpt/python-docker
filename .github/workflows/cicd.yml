@@ -246,11 +246,12 @@ jobs:
         export AWS_REGION="${AWS_REGION}"
       
         # Login to ECR and pull the Docker image
-        sudo aws ecr get-login-password --region ${AWS_REGION} | sudo docker login --username AWS --password-stdin ${ECR_REGISTRY}
-        sudo docker pull ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
+        aws sts get-caller-identity
+        sudo aws ecr get-login-password --region "${AWS_REGION}" | sudo docker login --username AWS --password-stdin "${ECR_REGISTRY}"
+        sudo docker pull "${ECR_REGISTRY}/${ECR_REPOSITORY}:latest"
       
         # Run the Docker container
-        sudo docker run -d -p 5000:5000 ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
+        sudo docker run -d -p 5000:5000 "${ECR_REGISTRY}/${ECR_REPOSITORY}:latest"
         sudo docker ps
         EOF
       
