@@ -98,6 +98,10 @@ jobs:
     - name: Install jq
       run: sudo apt-get update && sudo apt-get install -y jq
 
+
+    - name: curl to server endpoint
+      run: curl http://18.234.82.32:9000
+
     - name: SonarQube Scan
       uses: SonarSource/sonarqube-scan-action@v2.0.2
       env:
