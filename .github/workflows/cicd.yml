@@ -90,6 +90,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: Snyk_scan
     steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
       env:
