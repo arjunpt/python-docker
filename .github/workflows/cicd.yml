@@ -171,7 +171,7 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        image: ${{ inputs.IMAGE_NAME }}:latest
+        image: appdev:latest
         args: --file=${{ inputs.dockerfile-path }} --severity-threshold=high --sarif-file-output=snyk-docker.sarif
 
     - name: Upload Snyk Docker report
